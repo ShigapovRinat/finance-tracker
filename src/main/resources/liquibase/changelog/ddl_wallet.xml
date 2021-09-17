@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-wallet" author="rinat">
+        <createTable tableName="wallet">
+            <column name="id" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="profit" type="int"/>
+            <column name="consumption" type="int"/>
+            <column name="limitation" type="int"/>
+            <column name="client_id" type="bigint"/>
+            <column name="create_date" type="timestamp"/>
+            <column name="update_date" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="constraints-wallet" author="rinat">
+        <addPrimaryKey tableName="wallet" columnNames="id"/>
+        <addNotNullConstraint tableName="wallet" columnName="name"/>
+        <addNotNullConstraint tableName="wallet" columnName="profit"/>
+        <addNotNullConstraint tableName="wallet" columnName="consumption"/>
+        <addDefaultValue tableName="wallet" columnName="profit" defaultValue="0"/>
+        <addDefaultValue tableName="wallet" columnName="consumption" defaultValue="0"/>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="wallet" constraintName="client_to_wallet_fk"
+                                 referencedColumnNames="id" referencedTableName="client"/>
+        <createSequence sequenceName="wallet_seq" startValue="100" incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

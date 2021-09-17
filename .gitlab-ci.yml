@@ -1,0 +1,44 @@
+image: docker:latest
+services:
+  - docker:dind
+
+stages:
+  - verify
+  - docker-build-push
+  - deploy
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+
+finance-tracker-build-and-test:
+  image: gradle:7.2.0-jdk11
+  stage: verify
+  script: "gradle build"
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 hour
+
+docker-example-build-push:
+  stage: docker-build-push
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t trx-processor .
+    - docker tag trx-processor:latest registry.gitlab.com/tinkoff-sirius/finance-tracker/trx-processor:v1
+    - docker push registry.gitlab.com/tinkoff-sirius/finance-tracker/trx-processor:v1
+
+finance-tracker-deploy:
+  image: google/cloud-sdk
+  stage: deploy
+  when: manual
+  script:
+    - echo "$GOOGLE_KEY" > key.json
+    - gcloud auth activate-service-account --key-file key.json
+    - gcloud config list
+    - gcloud config set compute/zone europe-north1-a
+    - gcloud config set compute/region europe-north1
+    - gcloud config set project sirius-322318
+    - gcloud config set disable_usage_reporting True
+    - gcloud config list
+    - gcloud compute instances update-container $VM_INSTANCE --container-image registry.gitlab.com/tinkoff-sirius/finance-tracker/trx-processor:v1 --container-restart-policy on-failure --container-env DB_HOST=$DB_HOST,DB_PORT=$DB_PORT,DB_NAME=$DB_NAME,DB_USERNAME=$DB_USERNAME,DB_PASSWORD=$DB_PASSWORD

@@ -1,0 +1,5 @@
+id;name;picture_id;is_income;client_id
+1;FOOD;1;false;1
+2;FOOD;1;false;2
+3;MEDICINE;2;true;1
+4;MEDICINE;2;true;2

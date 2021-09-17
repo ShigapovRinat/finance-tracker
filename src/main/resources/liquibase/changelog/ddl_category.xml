@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-category" author="rinat">
+        <createTable tableName="category">
+            <column name="id" type="bigint"/>
+            <column name="name" type="varchar(50)"/>
+            <column name="picture_id" type="int"/>
+            <column name="is_income" type="boolean"/>
+            <column name="client_id" type="bigint"/>
+            <column name="create_date" type="timestamp"/>
+            <column name="update_date" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="constraints-category" author="rinat">
+        <addPrimaryKey tableName="category" columnNames="id"/>
+        <addNotNullConstraint tableName="category" columnName="name"/>
+        <addNotNullConstraint tableName="category" columnName="picture_id"/>
+        <addNotNullConstraint tableName="category" columnName="is_income"/>
+        <addForeignKeyConstraint baseTableName="category" baseColumnNames="client_id"
+                                 constraintName="client_to_category_fk"
+                                 referencedTableName="client" referencedColumnNames="id"/>
+        <createSequence sequenceName="category_seq" startValue="100" incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

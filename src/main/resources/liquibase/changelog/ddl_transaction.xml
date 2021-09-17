@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-transaction" author="rinat">
+        <createTable tableName="transaction">
+            <column name="id" type="bigint"/>
+            <column name="amount" type="int"/>
+            <column name="wallet_id" type="bigint"/>
+            <column name="category_id" type="bigint"/>
+            <column name="execution_date" type="bigint"/>
+            <column name="create_date" type="timestamp"/>
+            <column name="update_date" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="constraints-transaction" author="rinat">
+        <addPrimaryKey tableName="transaction" columnNames="id"/>
+        <addNotNullConstraint tableName="transaction" columnName="amount"/>
+        <addNotNullConstraint tableName="transaction" columnName="category_id"/>
+        <addNotNullConstraint tableName="transaction" columnName="execution_date"/>
+        <addForeignKeyConstraint baseColumnNames="wallet_id" baseTableName="transaction"
+                                 constraintName="wallet_to_transaction_fk"
+                                 referencedColumnNames="id" referencedTableName="wallet"/>
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="transaction"
+                                 constraintName="category_to_transaction_fk"
+                                 referencedColumnNames="id" referencedTableName="category"/>
+        <createSequence sequenceName="transaction_seq" startValue="100" incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

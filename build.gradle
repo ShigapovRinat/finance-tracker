@@ -1,0 +1,68 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'sirius.tinkoff.financial.tracker'
+version = '1.0'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+configurations.all {
+	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('testcontainersVersion', "1.15.3")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-jersey'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.session:spring-session-core'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'com.google.guava:guava:30.1.1-jre'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
+	implementation 'org.liquibase:liquibase-core:4.4.3'
+	implementation 'com.jayway.jsonpath:json-path:2.4.0'
+	implementation 'org.liquibase:liquibase-core:4.4.3'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz:2.5.4'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.testcontainers:testcontainers:1.15.3'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+	implementation 'org.liquibase:liquibase-core:4.4.3'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.5.4'
+	implementation 'org.apache.cxf:cxf-spring-boot-starter-jaxrs:3.4.4'
+
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
